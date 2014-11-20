@@ -1,0 +1,29 @@
+<h1>Listing host_configs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Host</th>
+      <th>Port</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @host_configs.each do |host_config| %>
+      <tr>
+        <td><%= host_config.host %></td>
+        <td><%= host_config.port %></td>
+        <td><%= link_to 'Show', host_config %></td>
+        <td><%= link_to 'Edit', edit_host_config_path(host_config) %></td>
+        <td><%= link_to 'Destroy', host_config, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Host config', new_host_config_path %>

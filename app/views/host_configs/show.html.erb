@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Host:</strong>
+  <%= @host_config.host %>
+</p>
+
+<p>
+  <strong>Port:</strong>
+  <%= @host_config.port %>
+</p>
+
+<%= link_to 'Edit', edit_host_config_path(@host_config) %> |
+<%= link_to 'Back', host_configs_path %>

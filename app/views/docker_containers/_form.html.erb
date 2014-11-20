@@ -1,0 +1,17 @@
+<%= form_for(@docker_container) do |f| %>
+  <% if @docker_container.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@docker_container.errors.count, "error") %> prohibited this docker_container from being saved:</h2>
+
+      <ul>
+      <% @docker_container.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
