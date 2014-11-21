@@ -13,27 +13,33 @@ class DockerContainer < ActiveRecord::Base
   def self.get_port_num
     cons = Docker::Container.all(:all => true)
     using_ports = Array.new
+
+    puts
+    puts "################"
     cons.each do |c|
-      puts "################"
-      puts c.json["HostConfig"]["PortBindings"]["8000/tcp"]
+      puts c.json["Name"].to_s + " : " + c.json["HostConfig"]["PortBindings"].to_s
       using_ports << c.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"].to_i
-      puts "################"
     end
+    using_ports.sort!
+    puts "----------------after sort"
+    puts using_ports
+    puts "################"
+    puts
 
     free = 8000
-    using_ports.each do |port|
-      (8001..9999).each do |i|
-        free = i if port != i
+    (8001..9999).each do |i|
+      if using_ports.include?(i) == false
+        free = i
         break
       end
     end
-    puts free
     free
   end
 
   def self.start cid
+    orca_port = DockerContainer.get_port_num
     container = Docker::Container.get(cid)
-    req_json = '{"PortBindings":{ "8000/tcp": [{ "HostPort": "8888" }] }}'
+    req_json = '{"PortBindings":{ "8000/tcp": [{ "HostPort": "orca_port" }] }}'.gsub(/orca_port/, "#{orca_port}")
     RestClient.post Docker.url + "/containers/#{container.id}/start", req_json, :content_type => :json, :accept => :json
   end
 
@@ -49,8 +55,9 @@ class DockerContainer < ActiveRecord::Base
 
   def self.commit_as_another cid
     container = Docker::Container.get(cid)
+    uid = Time.now.strftime("%Y%m%d%H%M%S")
     req_json = '{}'
-    RestClient.post Docker.url + "/commit?container=#{container.id}&repo=tokumura/orca_c", req_json, :content_type => :json, :accept => :json
+    RestClient.post Docker.url + "/commit?container=#{container.id}&repo=tokumura/orca_#{uid}", req_json, :content_type => :json, :accept => :json
   end
 
 end

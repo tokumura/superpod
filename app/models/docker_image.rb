@@ -12,14 +12,14 @@ class DockerImage < ActiveRecord::Base
 
   def self.launch image
     orca_port = DockerContainer.get_port_num
+    puts "$$$$$$$$$$$$"
+    puts "next free port : " + orca_port.to_s
+    puts "$$$$$$$$$$$$"
     container = Docker::Container.create('Image' => image, 
                                          'ExposedPorts' => '8000/tcp', 
                                          'OpenStdin' => true,
                                          'Tty' => true)
     container.stop
-    puts "##########"
-    puts orca_port
-    puts "##########"
     req_json = '{"PortBindings":{ "8000/tcp": [{ "HostPort": "orca_port" }] }}'.gsub(/orca_port/, "#{orca_port}")
     RestClient.post Docker.url + "/containers/#{container.id}/start", req_json, :content_type => :json, :accept => :json
   end
