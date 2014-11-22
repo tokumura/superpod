@@ -1,6 +1,5 @@
 require 'docker'
-
-class DockerContainer < ActiveRecord::Base
+class Container < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
@@ -10,21 +9,15 @@ class DockerContainer < ActiveRecord::Base
     cons
   end
 
-  def self.get_port_num
+  def self.get_free_port
     cons = Docker::Container.all(:all => true)
     using_ports = Array.new
 
-    puts
-    puts "################"
     cons.each do |c|
       puts c.json["Name"].to_s + " : " + c.json["HostConfig"]["PortBindings"].to_s
       using_ports << c.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"].to_i
     end
     using_ports.sort!
-    puts "----------------after sort"
-    puts using_ports
-    puts "################"
-    puts
 
     free = 8000
     (8001..9999).each do |i|
@@ -37,7 +30,7 @@ class DockerContainer < ActiveRecord::Base
   end
 
   def self.start cid
-    orca_port = DockerContainer.get_port_num
+    orca_port = Container.get_free_port
     container = Docker::Container.get(cid)
     req_json = '{"PortBindings":{ "8000/tcp": [{ "HostPort": "orca_port" }] }}'.gsub(/orca_port/, "#{orca_port}")
     RestClient.post Docker.url + "/containers/#{container.id}/start", req_json, :content_type => :json, :accept => :json
@@ -59,5 +52,4 @@ class DockerContainer < ActiveRecord::Base
     req_json = '{}'
     RestClient.post Docker.url + "/commit?container=#{container.id}&repo=tokumura/orca_#{uid}", req_json, :content_type => :json, :accept => :json
   end
-
 end

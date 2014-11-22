@@ -1,0 +1,24 @@
+<h3>イメージ一覧</h3>
+
+<table class="table table-hover table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @images.each do |img| %>
+      <tr>
+        <td><%= img.id[0..10] %></td>
+        <td><%= img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "") %></td>
+        <td><%= link_to 'Launch', launch_images_path + "?image=" + img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, ""), :class => 'btn btn-info' %></td>
+        <td><%= link_to 'Remove', remove_images_path + "?imgid=" + img.id, :class => 'btn btn-danger' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

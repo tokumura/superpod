@@ -11,7 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141120122612) do
+ActiveRecord::Schema.define(version: 20141122051334) do
+
+  create_table "containers", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "docker_containers", force: true do |t|
     t.datetime "created_at"
@@ -26,6 +31,11 @@ ActiveRecord::Schema.define(version: 20141120122612) do
   create_table "host_configs", force: true do |t|
     t.string   "host"
     t.string   "port"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "images", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

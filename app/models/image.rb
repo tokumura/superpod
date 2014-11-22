@@ -1,7 +1,7 @@
 require 'docker'
 require "rest_client"
 
-class DockerImage < ActiveRecord::Base
+class Image < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
@@ -11,10 +11,7 @@ class DockerImage < ActiveRecord::Base
   end
 
   def self.launch image
-    orca_port = DockerContainer.get_port_num
-    puts "$$$$$$$$$$$$"
-    puts "next free port : " + orca_port.to_s
-    puts "$$$$$$$$$$$$"
+    orca_port = Container.get_free_port
     container = Docker::Container.create('Image' => image, 
                                          'ExposedPorts' => '8000/tcp', 
                                          'OpenStdin' => true,
@@ -28,4 +25,5 @@ class DockerImage < ActiveRecord::Base
     image = Docker::Image.get(imgid)
     image.remove(:force => true)
   end
+
 end

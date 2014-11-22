@@ -1,7 +1,6 @@
 Superpod::Application.routes.draw do
-  resources :host_configs
 
-  resources :docker_containers do
+  resources :containers do
     collection do
       get :start
       get :stop
@@ -10,12 +9,14 @@ Superpod::Application.routes.draw do
     end
   end
 
-  resources :docker_images do
+  resources :images do
     collection do
       get :launch
       get :remove
     end
   end
+
+  resources :host_configs
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
