@@ -12,13 +12,99 @@
 
   <tbody>
     <% @images.each do |img| %>
+      <% img_name  = img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "") %>
+      <% img_id = img.id %>
       <tr>
-        <td><%= img.id[0..10] %></td>
-        <td><%= img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "") %></td>
-        <td><%= link_to 'Launch', launch_images_path + "?image=" + img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, ""), :class => 'btn btn-info' %></td>
-        <td><%= link_to 'Remove', remove_images_path + "?imgid=" + img.id, :class => 'btn btn-danger' %></td>
+        <td><%= img_id[0..10] %></td>
+        <td><%= img_name %></td>
+        <td>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#launchModal" 
+           data-whatever="<%= img_name + "|" + img_id %>">Launch</button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" 
+           data-whatever="<%= img_name + "|" + img_id %>">Remove</button>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<!-- Launch Modal Dialog -->
+<div class="modal fade" id="launchModal" tabindex="-1" role="dialog" aria-labelledby="launchModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">Launch</h4>
+      </div>
+      <%= form_tag(launch_images_path, :method => :post) do %> 
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="message-text" class="control-label">Container Name</label>
+            <%= text_field_tag :container_name, "", :class => "form-control" %>
+          </div>
+          <%= hidden_field_tag :image_name %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= submit_tag "Launch", :class => "btn btn-primary" %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Remove Modal Dialog -->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="exampleModalLabel">Remove Image</h2>
+      </div>
+      <%= form_tag(remove_images_path, :method => :post) do %> 
+        <%= hidden_field_tag :image_id %>
+        <div class="modal-body">
+          <h3>Are you sure?</h3>
+          <h4 id="remove_target"></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= submit_tag "Remove", :class => "btn btn-danger" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+var button, param, image_name, image_id, title;
+
+$('#launchModal').on('show.bs.modal', function (event) {
+  button = $(event.relatedTarget)
+  ready_to_submit();
+  $('#image_name').val(image_name);
+  var modal = $(this)
+  modal.find('.modal-title').text(title)
+  setTimeout(function() {$('#container_name').focus();}, 1000);
+})
+
+$('#removeModal').on('show.bs.modal', function (event) {
+  button = $(event.relatedTarget)
+  ready_to_submit();
+  $('#remove_target').html(title);
+  $('#image_id').val(image_id);
+  var modal = $(this)
+  modal.find('.modal-title').text("Remove Image")
+})
+
+function ready_to_submit() {
+  param = button.data('whatever').split('|')
+  image_name = param[0]
+  image_id = param[1]
+  title = image_name + "  ( " + image_id.substring(0, 10) + " )";
+}
+// -->
+</script>

@@ -12,6 +12,7 @@
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
 
@@ -29,6 +30,7 @@
         <td><%= link_to 'stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %></td>
         <td><%= link_to 'remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
         <td><%= link_to 'commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
+        <td><%# con.json %></td>
       </tr>
     <% end %>
   </tbody>

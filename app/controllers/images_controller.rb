@@ -8,13 +8,14 @@ class ImagesController < ApplicationController
   end
 
   def launch
-    image = params["image"]
-    Image.launch(image)
+    image = params["image_name"]
+    container_name = params["container_name"]
+    Image.launch(image, container_name)
     redirect_to containers_path
   end
 
   def remove
-    imgid = params["imgid"]
+    imgid = params["image_id"]
     Image.remove(imgid)
     redirect_to images_path
   end

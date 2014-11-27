@@ -11,8 +11,8 @@ Superpod::Application.routes.draw do
 
   resources :images do
     collection do
-      get :launch
-      get :remove
+      post :launch
+      post :remove
     end
   end
 
