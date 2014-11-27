@@ -30,9 +30,56 @@
         <td><%= link_to 'stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %></td>
         <td><%= link_to 'remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
         <td><%= link_to 'commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
-        <td><%# con.json %></td>
+        <td>
+          <button type="button" class="btn btn-dafault" data-toggle="modal" data-target="#sshModal" 
+           data-whatever="<%=con.json['Name'].gsub(/\//, '')%>">SSH</button>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<!-- SSH Modal Dialog -->
+<div class="modal fade" id="sshModal" tabindex="-1" role="dialog" aria-labelledby="sshModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="exampleModalLabel">How to connect to container.</h2>
+      </div>
+      <div class="modal-body">
+        <h4>Run this command on console.</h4>
+        <input type="text" id="container_name" value="" readonly="readonly" onclick="copy2clipbord();" style="width:80%;">
+        <br/>
+        <br/>
+        <h5>If you are not ready to connect to Docker host, please see bellow.</h5>
+        <h5>1. Install Boot2Docker. (See official site)</h5>
+        <h5>2. Run 'docker pull tokumura/docker-client-v13' on boot2docker.</h5>
+        <h5>3. Run 'docker run -i -t tokumura/docker-client-v13 /bin/bash' on boot2docker.</h5>
+        <h5>4. Run 'export DOCKER_HOST=tcp://54.65.122.251:5422' on the container.</h5>
+        <h5>5. Run 'docker version' on the container.</h5>
+        <h5>6. If you can see version info, you got ready for connecting to ORCA containers.</h5>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+$('#sshModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var name = button.data('whatever')
+  $('#container_name').val("docker exec -it " + name + " bash");
+  var modal = $(this)
+  modal.find('.modal-title').text("How to connect to container.")
+})
+
+function copy2clipbord() {
+  $('#container_name').select();
+}
+// -->
+</script>
