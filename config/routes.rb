@@ -17,6 +17,12 @@ Superpod::Application.routes.draw do
   end
 
   resources :host_configs
+  resources :welcome, :only => ['index']
+
+  root :to => 'welcome#index'
+  get :containers, :to => 'containers#index', :as => :user_root
+
+  devise_for :users
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
