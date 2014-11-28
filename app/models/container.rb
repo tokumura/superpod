@@ -52,4 +52,23 @@ class Container < ActiveRecord::Base
     req_json = '{}'
     RestClient.post Docker.url + "/commit?container=#{container.id}&repo=tokumura/orca_#{uid}", req_json, :content_type => :json, :accept => :json
   end
+
+  def self.get_state_word status
+    puts "########"
+    puts status
+    puts "########"
+    word = "stopped" 
+    if status == "true"
+      word = "running"
+    end
+    word
+  end
+
+  def self.get_state_color status
+    color = "#FF7548"
+    if status == "true"
+      color = "#70D53C"
+    end
+    color
+  end
 end

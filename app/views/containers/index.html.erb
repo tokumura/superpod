@@ -4,11 +4,9 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>コンテナ名</th>
+      <th>コンテナ名 ( 元イメージ )</th>
       <th>ORCAポート番号</th>
-      <th>イメージ</th>
       <th>ステータス</th>
-      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -18,16 +16,22 @@
 
   <tbody>
     <% @containers.each do |con| %>
-      <% status = "Stop" %>
-      <% status = "Start" if con.json["State"]["Running"].to_s == "true" %>
+      <% state = Container.get_state_word(con.json["State"]["Running"].to_s) %>
+      <% color = Container.get_state_color(con.json["State"]["Running"].to_s) %>
       <tr>
         <td><%= con.id[0..11] %></td>
-        <td><%= con.json["Name"].gsub(/\//, "")%></td>
+        <td>
+          <b><%= con.json["Name"].gsub(/\//, "")%></b>  ( <%= con.json["Config"]["Image"]%> )
+        </td>
         <td><%= con.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"] %></td>
-        <td><%= con.json["Config"]["Image"]%></td>
-        <td><%= status %></td>
-        <td><%= link_to 'start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info' %></td>
-        <td><%= link_to 'stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %></td>
+        <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state %></td>
+        <td>
+          <% if state == "running" %>
+            <%= link_to 'stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %>
+          <% else %>
+            <%= link_to 'start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info' %>
+          <% end %>
+        </td>
         <td><%= link_to 'remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
         <td><%= link_to 'commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
         <td>

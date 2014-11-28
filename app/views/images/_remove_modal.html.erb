@@ -1,0 +1,38 @@
+<!-- Remove Modal Dialog -->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="exampleModalLabel">Remove Image</h2>
+      </div>
+      <%= form_tag(remove_images_path, :method => :post) do %> 
+        <%= hidden_field_tag :image_id %>
+        <div class="modal-body">
+          <h3>Are you sure?</h3>
+          <h4 id="remove_target"></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= submit_tag "Remove", :class => "btn btn-danger" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+$('#removeModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var param = button.data('whatever').split('|')
+  var image_name = param[0]
+  var image_id = param[1]
+  var title = image_name + "  ( " + image_id.substring(0, 10) + " )";
+  $('#remove_target').html(title);
+  $('#image_id').val(image_id);
+  var modal = $(this)
+  modal.find('.modal-title').text("Remove Image")
+})
+// -->
+</script>
