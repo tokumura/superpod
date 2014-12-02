@@ -1,3 +1,4 @@
+require 'docker'
 class Image < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
