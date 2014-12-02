@@ -49,20 +49,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h2 class="modal-title" id="exampleModalLabel">How to connect to container.</h2>
+        <h2 class="modal-title" id="exampleModalLabel">コンテナに接続</h2>
       </div>
       <div class="modal-body">
-        <h4>Run this command on console.</h4>
+        <h4>以下のコマンドを実行</h4>
         <input type="text" id="container_name" value="" readonly="readonly" onclick="copy2clipbord();" style="width:80%;">
         <br/>
         <br/>
-        <h5>If you are not ready to connect to Docker host, please see bellow.</h5>
-        <h5>1. Install Boot2Docker. (See official site)</h5>
-        <h5>2. Run 'docker pull tokumura/docker-client-v13' on boot2docker.</h5>
-        <h5>3. Run 'docker run -i -t tokumura/docker-client-v13 /bin/bash' on boot2docker.</h5>
-        <h5>4. Run 'export DOCKER_HOST=tcp://54.65.122.251:5422' on the container.</h5>
-        <h5>5. Run 'docker version' on the container.</h5>
-        <h5>6. If you can see version info, you got ready for connecting to ORCA containers.</h5>
+        <h5>dockerクライアントを入れていない場合、以下の手順でセットアップしてください。</h5>
+        <h5>1. Boot2dokerをインストール (<a href="http://boot2docker.io/" target="_blank">公式サイト</a>を参照)</h5>
+        <h5>2. Boot2dokerを起動後 'docker pull tokumura/docker-client-v13' を実行</h5>
+        <h5>3. Boot2doker上で 'docker run -i -t tokumura/docker-client-v13 /bin/bash' を実行</h5>
+        <h5>4. Boot2doker上で 'export DOCKER_HOST=tcp://54.65.122.251:5422' を実行</h5>
+        <h5>5. 上記コマンドで起動/ログインしたコンテナ内で 'docker version' を実行</h5>
+        <h5>6. バージョン情報が表示されたら準備完了です。<br/>　'docker exec'を実行してコンテナにログインしてください。</h5>
 
       </div>
       <div class="modal-footer">
@@ -79,7 +79,7 @@ $('#sshModal').on('show.bs.modal', function (event) {
   var name = button.data('whatever')
   $('#container_name').val("docker exec -it " + name + " bash");
   var modal = $(this)
-  modal.find('.modal-title').text("How to connect to container.")
+  modal.find('.modal-title').text("コンテナに接続")
 })
 
 function copy2clipbord() {

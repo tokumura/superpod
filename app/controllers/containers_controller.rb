@@ -1,4 +1,5 @@
 class ContainersController < ApplicationController
+  before_filter :authenticate_user!
   before_action :set_container, only: [:show, :edit, :update, :destroy]
 
   # GET /containers

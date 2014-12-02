@@ -1,4 +1,5 @@
 class HostConfigsController < ApplicationController
+  before_filter :authenticate_user!
   before_action :set_host_config, only: [:show, :edit, :update, :destroy]
 
   # GET /host_configs
