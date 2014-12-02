@@ -8,6 +8,6 @@ class WelcomeController < ApplicationController
       @move_to = host_configs_path
     end
     
-    redirect_to images_path
+    redirect_to @move_to
   end
 end

@@ -6,6 +6,7 @@
       <th>ID</th>
       <th>コンテナ名 ( 元イメージ )</th>
       <th>ORCAポート番号</th>
+      <th>オーナー</th>
       <th>ステータス</th>
       <th></th>
       <th></th>
@@ -16,6 +17,7 @@
 
   <tbody>
     <% @containers.each do |con| %>
+      <% container = Container.find_by(container_id: con.id[0..11].to_s) %>
       <% state = Container.get_state_word(con.json["State"]["Running"].to_s) %>
       <% color = Container.get_state_color(con.json["State"]["Running"].to_s) %>
       <tr>
@@ -24,16 +26,17 @@
           <b><%= con.json["Name"].gsub(/\//, "")%></b>  ( <%= con.json["Config"]["Image"]%> )
         </td>
         <td><%= con.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"] %></td>
+        <td><%= container.author %></td>
         <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state %></td>
         <td>
           <% if state == "running" %>
-            <%= link_to 'stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %>
+            <%= link_to 'Stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %>
           <% else %>
-            <%= link_to 'start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info' %>
+            <%= link_to 'Start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info' %>
           <% end %>
         </td>
-        <td><%= link_to 'remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
-        <td><%= link_to 'commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
+        <td><%= link_to 'Remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
+        <td><%= link_to 'Commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
         <td>
           <button type="button" class="btn btn-dafault" data-toggle="modal" data-target="#sshModal" 
            data-whatever="<%=con.json['Name'].gsub(/\//, '')%>">SSH</button>
@@ -43,47 +46,4 @@
   </tbody>
 </table>
 
-<!-- SSH Modal Dialog -->
-<div class="modal fade" id="sshModal" tabindex="-1" role="dialog" aria-labelledby="sshModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h2 class="modal-title" id="exampleModalLabel">コンテナに接続</h2>
-      </div>
-      <div class="modal-body">
-        <h4>以下のコマンドを実行</h4>
-        <input type="text" id="container_name" value="" readonly="readonly" onclick="copy2clipbord();" style="width:80%;">
-        <br/>
-        <br/>
-        <h5>dockerクライアントを入れていない場合、以下の手順でセットアップしてください。</h5>
-        <h5>1. Boot2dokerをインストール (<a href="http://boot2docker.io/" target="_blank">公式サイト</a>を参照)</h5>
-        <h5>2. Boot2dokerを起動後 'docker pull tokumura/docker-client-v13' を実行</h5>
-        <h5>3. Boot2doker上で 'docker run -i -t tokumura/docker-client-v13 /bin/bash' を実行</h5>
-        <h5>4. Boot2doker上で 'export DOCKER_HOST=tcp://54.65.122.251:5422' を実行</h5>
-        <h5>5. 上記コマンドで起動/ログインしたコンテナ内で 'docker version' を実行</h5>
-        <h5>6. バージョン情報が表示されたら準備完了です。<br/>　'docker exec'を実行してコンテナにログインしてください。</h5>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script type="text/javascript">
-<!--
-$('#sshModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var name = button.data('whatever')
-  $('#container_name').val("docker exec -it " + name + " bash");
-  var modal = $(this)
-  modal.find('.modal-title').text("コンテナに接続")
-})
-
-function copy2clipbord() {
-  $('#container_name').select();
-}
-// -->
-</script>
+<%= render 'ssh_modal' %>

@@ -3,7 +3,7 @@ class Container < ActiveRecord::Base
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
 
-  def self.all
+  def self.all_on_host
     cons = Docker::Container.all(:all => true)
     cons
   end
@@ -13,7 +13,6 @@ class Container < ActiveRecord::Base
     using_ports = Array.new
 
     cons.each do |c|
-      puts c.json["Name"].to_s + " : " + c.json["HostConfig"]["PortBindings"].to_s
       using_ports << c.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"].to_i
     end
     using_ports.sort!
@@ -53,9 +52,6 @@ class Container < ActiveRecord::Base
   end
 
   def self.get_state_word status
-    puts "########"
-    puts status
-    puts "########"
     word = "stopped" 
     if status == "true"
       word = "running"
@@ -69,5 +65,12 @@ class Container < ActiveRecord::Base
       color = "#70D53C"
     end
     color
+  end
+
+  def self.save cid, author
+    container = Container.new
+    container.container_id = cid
+    container.author = author
+    container.save
   end
 end

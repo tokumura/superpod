@@ -5,7 +5,8 @@ class ContainersController < ApplicationController
   # GET /containers
   # GET /containers.json
   def index
-    @containers = Container.all
+    @containers = Container.all_on_host
+    @clist = Container.all
   end
 
   def start
@@ -19,7 +20,10 @@ class ContainersController < ApplicationController
   end
 
   def remove
-    Container.remove(params["cid"])
+    cid = params["cid"]
+    Container.remove(cid)
+    container = Container.find_by(container_id: cid[0..11])
+    container.destroy
     redirect_to containers_path
   end
 
