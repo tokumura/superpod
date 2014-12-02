@@ -1,4 +1,3 @@
-require 'docker'
 class Container < ActiveRecord::Base
 
   host_config = HostConfig.all[0]

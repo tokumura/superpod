@@ -1,6 +1,3 @@
-require 'docker'
-require "rest_client"
-
 class Image < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
