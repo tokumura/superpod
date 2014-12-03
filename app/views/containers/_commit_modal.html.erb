@@ -1,0 +1,39 @@
+<!-- Commit Modal Dialog -->
+<div class="modal fade" id="commitModal" tabindex="-1" role="dialog" aria-labelledby="commitModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">保存</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">イメージ保存</h4>
+      </div>
+      <%= form_tag(commit_containers_path, :method => :post) do %> 
+      <div class="modal-body">
+          <div class="form-group">
+            <label for="message-text" class="control-label">イメージ名</label>
+            <%= text_field_tag :image_name, "", :class => "form-control" %>
+          </div>
+          <%= hidden_field_tag :save_cid %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+        <%= submit_tag "保　存", :class => "btn btn-primary" %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+$('#commitModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var param = button.data('whatever').split('|')
+  var cname = param[0]
+  var cid = param[1]
+  $('#save_cid').val(cid);
+  var modal = $(this)
+  modal.find('.modal-title').text(cname);
+  setTimeout(function() {$('#image_name').focus();}, 1000);
+})
+// -->
+</script>

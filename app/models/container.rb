@@ -1,10 +1,18 @@
+require 'docker'
 class Container < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
 
-  def self.all_on_host
-    cons = Docker::Container.all(:all => true)
+  def self.all_on_host author
+    cons = Array.new
+    Docker::Container.all(:all => true).each do |c|
+      if author == nil || author == "all"
+        cons << c
+      elsif author == c.json["Name"].gsub(/\//, "").split('___')[1]
+        cons << c
+      end
+    end
     cons
   end
 
@@ -44,11 +52,10 @@ class Container < ActiveRecord::Base
     container.delete(:force => true)
   end
 
-  def self.commit_as_another cid
+  def self.commit_as_another cid, image_name
     container = Docker::Container.get(cid)
-    uid = Time.now.strftime("%Y%m%d%H%M%S")
     req_json = '{}'
-    RestClient.post Docker.url + "/commit?container=#{container.id}&repo=tokumura/orca_#{uid}", req_json, :content_type => :json, :accept => :json
+    RestClient.post Docker.url + "/commit?container=#{container.id}&repo=#{image_name}", req_json, :content_type => :json, :accept => :json
   end
 
   def self.get_state_word status
@@ -65,12 +72,5 @@ class Container < ActiveRecord::Base
       color = "#70D53C"
     end
     color
-  end
-
-  def self.save cid, author
-    container = Container.new
-    container.container_id = cid
-    container.author = author
-    container.save
   end
 end

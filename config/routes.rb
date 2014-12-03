@@ -5,7 +5,7 @@ Superpod::Application.routes.draw do
       get :start
       get :stop
       post :remove
-      get :commit
+      post :commit
     end
   end
 

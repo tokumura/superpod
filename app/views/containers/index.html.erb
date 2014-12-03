@@ -1,4 +1,15 @@
-<h3>コンテナ一覧　　（ ORCAのIPアドレス:<%= @host %>, ユーザー/パスワード:ormaster/ormaster123 ）</h3>
+<div style="margin-bottom:10px;">
+  <h4 style="display:inline; margin-right:30px;">コンテナ一覧</h4>
+  <select id="userlist" class="form-control" 
+   style="width:150px; display: inline;" onchange="narrow_down()">
+    <option value="all">全て</option>
+    <% @users.each do |u| %>
+      <% selected = "" %>
+      <% selected = "selected" if @selected_user == u %>
+      <option <%=selected%>><%=u%></option>
+    <% end %>
+  </select>
+</div>
 
 <table class="table table-hover table-bordered">
   <thead>
@@ -31,19 +42,24 @@
         <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state %></td>
         <td>
           <% if state == "running" %>
-            <%= link_to 'Stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning btn-xs', :style => 'width:70px;' %>
+            <%= link_to '停止', stop_containers_path + "?cid=#{con.id}&author=#{@selected_user}", 
+                :class => 'btn btn-warning btn-xs', :style => 'width:70px;' %>
           <% else %>
-            <%= link_to 'Start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info btn-xs', :style => 'width:70px;' %>
+            <%= link_to '起動', start_containers_path + "?cid=#{con.id}&author=#{@selected_user}", 
+                :class => 'btn btn-info btn-xs', :style => 'width:70px;' %>
           <% end %>
         </td>
         <td>
-          <button type="button" class="btn btn-danger btn-xs" style="width:70px;" data-toggle="modal" data-target="#removeModal" 
-           data-whatever="<%= cname + '|' + author + '|' + con.id %>">Remove</button>
+          <button type="button" class="btn btn-danger btn-xs" style="width:70px;" data-toggle="modal" 
+            data-target="#removeModal" data-whatever="<%= cname + '|' + author + '|' + con.id %>">削除</button>
         </td>
-        <td><%= link_to 'Commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary btn-xs', :style => 'width:70px;' %></td>
         <td>
-          <button type="button" class="btn btn-default btn-xs" styole="width:70px;" data-toggle="modal" data-target="#sshModal" 
-           data-whatever="<%= cname %>">SSH</button>
+          <button type="button" class="btn btn-primary btn-xs" style="width:70px;" data-toggle="modal" 
+            data-target="#commitModal" data-whatever="<%= cname + '|' + con.id %>">保存</button>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-xs" style="width:70px;" data-toggle="modal" 
+            data-target="#sshModal" data-whatever="<%= cname %>">SSH</button>
         </td>
       </tr>
     <% end %>
@@ -52,4 +68,13 @@
 
 <%= render 'remove_modal' %>
 <%= render 'ssh_modal' %>
+<%= render 'commit_modal' %>
 
+<script type="text/javascript">
+<!--
+  function narrow_down() {
+    var user = $("#userlist").val();
+    window.location.href = "<%=containers_path%>?author=" + user;
+  }
+// -->
+</script>

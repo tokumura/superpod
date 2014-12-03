@@ -13,7 +13,7 @@ class ImagesController < ApplicationController
     author = current_user.email[0..current_user.email.index('@')-1]
     container_name = params["container_name"] + "___" + author
     Image.launch(image, container_name)
-    redirect_to containers_path
+    redirect_to containers_path + "?author=" + author
   end
 
   def remove

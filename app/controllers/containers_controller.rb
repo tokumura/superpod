@@ -5,18 +5,26 @@ class ContainersController < ApplicationController
   # GET /containers
   # GET /containers.json
   def index
+    author = params["author"]
+    @selected_user = author
+    @users = Array.new
+    User.all.each do |u|
+      @users << u.email[0..u.email.index('@')-1] 
+    end
     @host = HostConfig.all[0].host
-    @containers = Container.all_on_host
+    @containers = Container.all_on_host(author)
   end
 
   def start
+    author = params["author"]
     Container.start(params["cid"])
-    redirect_to containers_path
+    redirect_to containers_path + "?author=" + author
   end
 
   def stop
+    author = params["author"]
     Container.stop(params["cid"])
-    redirect_to containers_path
+    redirect_to containers_path + "?author=" + author
   end
 
   def remove
@@ -26,7 +34,9 @@ class ContainersController < ApplicationController
   end
 
   def commit
-    Container.commit_as_another(params["cid"])
+    cid = params["save_cid"]
+    image_name = params["image_name"]
+    Container.commit_as_another(cid, image_name)
     redirect_to images_path
   end
 
