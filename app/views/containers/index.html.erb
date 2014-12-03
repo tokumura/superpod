@@ -1,4 +1,4 @@
-<h3>コンテナ一覧</h3>
+<h3>コンテナ一覧　　（ ORCAのIPアドレス => <%= @host %> ）</h3>
 
 <table class="table table-hover table-bordered">
   <thead>
@@ -17,33 +17,39 @@
 
   <tbody>
     <% @containers.each do |con| %>
-      <% container = Container.find_by(container_id: con.id[0..11].to_s) %>
+      <% cname = con.json["Name"].gsub(/\//, "").split('___')[0] %>
+      <% author = con.json["Name"].gsub(/\//, "").split('___')[1] %>
       <% state = Container.get_state_word(con.json["State"]["Running"].to_s) %>
       <% color = Container.get_state_color(con.json["State"]["Running"].to_s) %>
       <tr>
         <td><%= con.id[0..11] %></td>
         <td>
-          <b><%= con.json["Name"].gsub(/\//, "")%></b>  ( <%= con.json["Config"]["Image"]%> )
+          <b><%= cname %></b>  ( <%= con.json["Config"]["Image"]%> )
         </td>
         <td><%= con.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"] %></td>
-        <td><%= container.author %></td>
+        <td><%= author %></td>
         <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state %></td>
         <td>
           <% if state == "running" %>
-            <%= link_to 'Stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning' %>
+            <%= link_to 'Stop', stop_containers_path + "?cid=#{con.id}", :class => 'btn btn-warning btn-xs', :style => 'width:70px;' %>
           <% else %>
-            <%= link_to 'Start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info' %>
+            <%= link_to 'Start', start_containers_path + "?cid=#{con.id}", :class => 'btn btn-info btn-xs', :style => 'width:70px;' %>
           <% end %>
         </td>
-        <td><%= link_to 'Remove', remove_containers_path + "?cid=#{con.id}", :class => 'btn btn-danger' %></td>
-        <td><%= link_to 'Commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary' %></td>
         <td>
-          <button type="button" class="btn btn-dafault" data-toggle="modal" data-target="#sshModal" 
-           data-whatever="<%=con.json['Name'].gsub(/\//, '')%>">SSH</button>
+          <button type="button" class="btn btn-danger btn-xs" style="width:70px;" data-toggle="modal" data-target="#removeModal" 
+           data-whatever="<%= cname + '|' + author + '|' + con.id %>">Remove</button>
+        </td>
+        <td><%= link_to 'Commit', commit_containers_path + "?cid=#{con.id}", :class => 'btn btn-primary btn-xs', :style => 'width:70px;' %></td>
+        <td>
+          <button type="button" class="btn btn-default btn-xs" styole="width:70px;" data-toggle="modal" data-target="#sshModal" 
+           data-whatever="<%= cname %>">SSH</button>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
+<%= render 'remove_modal' %>
 <%= render 'ssh_modal' %>
+

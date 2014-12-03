@@ -1,0 +1,40 @@
+<!-- Remove Modal Dialog -->
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h2 class="modal-title" id="exampleModalLabel">コンテナ削除</h2>
+      </div>
+
+      <%= form_tag(remove_containers_path, :method => :post) do %> 
+        <%= hidden_field_tag :cid %>
+        <div class="modal-body">
+          <h3>Are you sure?</h3>
+          <h4 id="remove_target"></h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <%= submit_tag "Remove", :class => "btn btn-danger" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+<!--
+$('#removeModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var param = button.data('whatever').split('|')
+  var cname = param[0]
+  var cauthor = param[1]
+  var cid = param[2]
+  var title = cname + "   ( " + cauthor + " )";
+  $('#remove_target').html(title);
+  $('#cid').val(cid);
+  var modal = $(this)
+  modal.find('.modal-title').text("Remove Container")
+})
+// -->
+</script>

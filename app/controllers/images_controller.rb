@@ -10,9 +10,9 @@ class ImagesController < ApplicationController
 
   def launch
     image = params["image_name"]
-    container_name = params["container_name"]
     author = current_user.email[0..current_user.email.index('@')-1]
-    Image.launch(image, container_name, author)
+    container_name = params["container_name"] + "___" + author
+    Image.launch(image, container_name)
     redirect_to containers_path
   end
 

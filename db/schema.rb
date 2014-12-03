@@ -11,13 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141202100919) do
+ActiveRecord::Schema.define(version: 20141128125633) do
 
   create_table "containers", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "container_id"
-    t.string   "author"
   end
 
   create_table "host_configs", force: true do |t|
@@ -30,8 +28,6 @@ ActiveRecord::Schema.define(version: 20141202100919) do
   create_table "images", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "image_id"
-    t.string   "author"
   end
 
   create_table "users", force: true do |t|
