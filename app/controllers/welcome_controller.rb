@@ -3,7 +3,7 @@ class WelcomeController < ApplicationController
 
   def index
     if HostConfig.all.size > 0
-      @move_to = images_path
+      @move_to = containers_path
     else
       @move_to = host_configs_path
     end
