@@ -3,8 +3,8 @@ class Image < ActiveRecord::Base
 
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
-
-  def self.all author
+  
+  def self.all_on_host author
     images = Array.new
     Docker::Image.all.each do |img|
       if author == nil || author == "all"

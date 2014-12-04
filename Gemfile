@@ -57,4 +57,5 @@ gem 'bootstrap-sass', '~> 3.3.1'
 gem 'font-awesome-sass'
 gem 'devise'
 gem 'therubyracer'
+gem 'rails_admin'
 

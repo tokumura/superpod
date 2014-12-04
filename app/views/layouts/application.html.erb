@@ -47,7 +47,7 @@
             <li><a href="#">アカウント</a></li>
             <li><a href="#">お問い合わせ</a></li>
             <% if current_user.email.index('t-okumura@') %>
-              <li><a href="<%= edit_host_config_path(1) %>">ホスト設定</a></li>
+              <li><a href="<%= rails_admin_path %>">RailsAdmin</a></li>
             <% end %>
             <li class="divider"></li>
             <li><%= link_to 'ログアウト', destroy_user_session_path, :method => :delete %></li>

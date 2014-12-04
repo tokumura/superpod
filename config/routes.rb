@@ -1,5 +1,7 @@
 Superpod::Application.routes.draw do
 
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
   resources :containers do
     collection do
       get :start

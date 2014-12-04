@@ -16,7 +16,7 @@ class ImagesController < ApplicationController
     User.all.each do |u|
       @users << u.email[0..u.email.index('@')-1] 
     end
-    @images = Image.all(author)
+    @images = Image.all_on_host(author)
   end
 
   def launch
