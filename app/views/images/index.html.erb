@@ -1,10 +1,22 @@
-<h3>イメージ一覧</h3>
+<div style="margin-bottom:10px;">
+  <h4 style="display:inline; margin-right:30px;">イメージ一覧</h4>
+  <select id="userlist" class="form-control" 
+   style="width:150px; display: inline;" onchange="narrow_down()">
+    <option value="all">全て</option>
+    <% @users.each do |u| %>
+      <% selected = "" %>
+      <% selected = "selected" if @selected_user == u %>
+      <option <%=selected%>><%=u%></option>
+    <% end %>
+  </select>
+</div>
 
 <table class="table table-hover table-bordered" style="width:70%;">
   <thead>
     <tr>
       <th>ID</th>
       <th>イメージ名</th>
+      <th>作成者</th>
       <th></th>
       <th></th>
     </tr>
@@ -12,18 +24,22 @@
 
   <tbody>
     <% @images.each do |img| %>
-      <% img_name  = img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "").split(':')[0] %>
+      <% img_full = img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "") %>
+      <% img_tag = img_full.split(':')[1] %>
+      <% img_name  = img_full.split(':')[0].split('___')[0] %>
+      <% author = img_full.split(':')[0].split('___')[1] %>
       <% img_id = img.id %>
       <tr>
         <td><%= img_id[0..10] %></td>
         <td><%= img_name %></td>
+        <td><%= author %></td>
         <td>
           <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#launchModal" 
-           data-whatever="<%= img_name + "|" + img_id %>">Launch</button>
+           data-whatever="<%= img_full + "|" + img_id %>">Launch</button>
         </td>
         <td>
           <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target="#removeModal" 
-           data-whatever="<%= img_name + "|" + img_id %>">Remove</button>
+           data-whatever="<%= img_full + "|" + img_id %>">Remove</button>
         </td>
       </tr>
     <% end %>
@@ -31,4 +47,13 @@
 </table>
 
 <%= render 'launch_modal' %>
-<%= render 'remove_modal' %>
+<%= render partial: 'remove_modal', locals: {author: @selected_user} %>
+
+<script type="text/javascript">
+<!--
+  function narrow_down() {
+    var user = $("#userlist").val();
+    window.location.href = "<%=images_path%>?author=" + user;
+  }
+// -->
+</script>

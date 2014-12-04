@@ -28,10 +28,11 @@
 $('#launchModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
   var param = button.data('whatever').split('|')
-  var image_name = param[0]
+  var image_full = param[0];
+  var image_name = param[0].split('___')[0];
   var image_id = param[1]
   var title = image_name + "  ( " + image_id.substring(0, 10) + " )";
-  $('#image_name').val(image_name);
+  $('#image_name').val(image_full);
   var modal = $(this)
   modal.find('.modal-title').text(title)
   setTimeout(function() {$('#container_name').focus();}, 1000);

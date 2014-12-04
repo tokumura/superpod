@@ -4,8 +4,16 @@ class Image < ActiveRecord::Base
   host_config = HostConfig.all[0]
   Docker.url = "http://#{host_config.host}:#{host_config.port}"
 
-  def self.all
-    images = Docker::Image.all
+  def self.all author
+    images = Array.new
+    Docker::Image.all.each do |img|
+      if author == nil || author == "all"
+        images << img
+      elsif author == img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "").split('___')[1].split(':')[0]
+        images << img 
+      end
+    end
+    images
   end
 
   def self.launch image, name

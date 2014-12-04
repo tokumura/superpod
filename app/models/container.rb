@@ -50,15 +50,14 @@ class Container < ActiveRecord::Base
     container.delete(:force => true)
   end
 
-  def self.commit_as_another cid, image_name, overwrite
+  def self.commit_as_another cid, image_name, overwrite, author
     container = Docker::Container.get(cid)
     if overwrite
-      base_image = container.json["Config"]["Image"].split(':')[0]
-      @url = "#{Docker.url}/commit?container=#{container.id}&repo=#{base_image}&tag=latest"
-    else
-      @url = "#{Docker.url}/commit?container=#{container.id}&repo=#{image_name}"
+      image_name = container.json["Config"]["Image"].split(':')[0]
     end
-    RestClient.post(@url, "{}", :content_type => :json, :accept => :json)
+    image_name = image_name + "___" + author
+    url = "#{Docker.url}/commit?container=#{container.id}&repo=#{image_name}&tag=latest"
+    RestClient.post(url, "{}", :content_type => :json, :accept => :json)
   end
 
   def self.get_state_word status

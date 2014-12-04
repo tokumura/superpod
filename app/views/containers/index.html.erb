@@ -28,7 +28,7 @@
 
   <tbody>
     <% @containers.each do |con| %>
-      <% image = con.json["Config"]["Image"].split(':')[0] %>
+      <% image = con.json["Config"]["Image"].split(':')[0].split('___')[0] %>
       <% cname = con.json["Name"].gsub(/\//, "").split('___')[0] %>
       <% author = con.json["Name"].gsub(/\//, "").split('___')[1] %>
       <% state = Container.get_state_word(con.json["State"]["Running"].to_s) %>

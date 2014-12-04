@@ -7,6 +7,7 @@
         <h2 class="modal-title" id="exampleModalLabel">Remove Image</h2>
       </div>
       <%= form_tag(remove_images_path, :method => :post) do %> 
+        <%= hidden_field_tag :author %>
         <%= hidden_field_tag :image_id %>
         <div class="modal-body">
           <h3>Are you sure?</h3>
@@ -26,11 +27,13 @@
 $('#removeModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
   var param = button.data('whatever').split('|')
-  var image_name = param[0]
+  var image_full = param[0]
+  var image_name = param[0].split('___')[0]
   var image_id = param[1]
   var title = image_name + "  ( " + image_id.substring(0, 10) + " )";
   $('#remove_target').html(title);
   $('#image_id').val(image_id);
+  $('#author').val('<%=author%>');
   var modal = $(this)
   modal.find('.modal-title').text("Remove Image")
 })

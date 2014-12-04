@@ -5,7 +5,18 @@ class ImagesController < ApplicationController
   # GET /images
   # GET /images.json
   def index
-    @images = Image.all
+    author = params["author"]
+    if author
+      @selected_user = author
+    else
+      @selected_user = User.get_account(current_user.email)
+      author = @selected_user
+    end
+    @users = Array.new
+    User.all.each do |u|
+      @users << u.email[0..u.email.index('@')-1] 
+    end
+    @images = Image.all(author)
   end
 
   def launch
@@ -18,8 +29,9 @@ class ImagesController < ApplicationController
 
   def remove
     imgid = params["image_id"]
+    author = params["author"]
     Image.remove(imgid)
-    redirect_to images_path
+    redirect_to images_path + "?author=#{author}"
   end
 
   private
