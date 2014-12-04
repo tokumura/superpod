@@ -36,10 +36,8 @@ class Container < ActiveRecord::Base
   end
 
   def self.start cid
-    orca_port = Container.get_free_port
     container = Docker::Container.get(cid)
-    req_json = '{"PortBindings":{ "8000/tcp": [{ "HostPort": "orca_port" }] }}'.gsub(/orca_port/, "#{orca_port}")
-    RestClient.post Docker.url + "/containers/#{container.id}/start", req_json, :content_type => :json, :accept => :json
+    container.start
   end
 
   def self.stop cid
@@ -59,11 +57,11 @@ class Container < ActiveRecord::Base
   end
 
   def self.get_state_word status
-    word = "stopped" 
+    state = Hash["en" => "stopped", "ja" => "停止中"]
     if status == "true"
-      word = "running"
+      state = Hash["en" => "running", "ja" => "起動中"]
     end
-    word
+    state
   end
 
   def self.get_state_color status

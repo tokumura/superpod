@@ -6,7 +6,11 @@ class ContainersController < ApplicationController
   # GET /containers.json
   def index
     author = params["author"]
-    @selected_user = author
+    if author
+      @selected_user = author
+    else
+      @selected_user = all
+    end
     @users = Array.new
     User.all.each do |u|
       @users << u.email[0..u.email.index('@')-1] 

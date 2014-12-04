@@ -39,9 +39,9 @@
         </td>
         <td><%= con.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"] %></td>
         <td><%= author %></td>
-        <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state %></td>
+        <td><i class="fa fa-circle" style="color:<%=color%>}"></i> <%= state["ja"] %></td>
         <td>
-          <% if state == "running" %>
+          <% if state["en"] == "running" %>
             <%= link_to '停止', stop_containers_path + "?cid=#{con.id}&author=#{@selected_user}", 
                 :class => 'btn btn-warning btn-xs', :style => 'width:70px;' %>
           <% else %>
