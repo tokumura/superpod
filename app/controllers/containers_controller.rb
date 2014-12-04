@@ -9,7 +9,7 @@ class ContainersController < ApplicationController
     if author
       @selected_user = author
     else
-      @selected_user = "all"
+      @selected_user = User.get_account(current_user.email)
     end
     @users = Array.new
     User.all.each do |u|

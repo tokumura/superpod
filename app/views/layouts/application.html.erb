@@ -60,6 +60,9 @@
 <% end %>
 
 <div class="container-fluid">
+  <% if alert && request.path_info.index("/users/sign_in") != nil  %>
+    <p class="alert alert-danger"><%= alert %></p>
+  <% end %>
   <%= yield %>
 </div>
 
