@@ -12,7 +12,7 @@
 
   <tbody>
     <% @images.each do |img| %>
-      <% img_name  = img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "") %>
+      <% img_name  = img.info["RepoTags"].to_s.gsub(/\"|\[|\]/, "").split(':')[0] %>
       <% img_id = img.id %>
       <tr>
         <td><%= img_id[0..10] %></td>

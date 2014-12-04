@@ -39,8 +39,9 @@ class ContainersController < ApplicationController
 
   def commit
     cid = params["save_cid"]
+    overwrite = params["overwrite"]
     image_name = params["image_name"]
-    Container.commit_as_another(cid, image_name)
+    Container.commit_as_another(cid, image_name, overwrite)
     redirect_to images_path
   end
 

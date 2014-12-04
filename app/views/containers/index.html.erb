@@ -28,6 +28,7 @@
 
   <tbody>
     <% @containers.each do |con| %>
+      <% image = con.json["Config"]["Image"].split(':')[0] %>
       <% cname = con.json["Name"].gsub(/\//, "").split('___')[0] %>
       <% author = con.json["Name"].gsub(/\//, "").split('___')[1] %>
       <% state = Container.get_state_word(con.json["State"]["Running"].to_s) %>
@@ -35,7 +36,7 @@
       <tr>
         <td><%= con.id[0..11] %></td>
         <td>
-          <b><%= cname %></b>  ( <%= con.json["Config"]["Image"]%> )
+          <b><%= cname %></b>  ( <%=image%> )
         </td>
         <td><%= con.json["HostConfig"]["PortBindings"]["8000/tcp"][0]["HostPort"] %></td>
         <td><%= author %></td>
@@ -55,7 +56,7 @@
         </td>
         <td>
           <button type="button" class="btn btn-primary btn-xs" style="width:70px;" data-toggle="modal" 
-            data-target="#commitModal" data-whatever="<%= cname + '|' + con.id %>">保存</button>
+            data-target="#commitModal" data-whatever="<%= cname + '|' + con.id + "|" + image %>">保存</button>
         </td>
         <td>
           <button type="button" class="btn btn-default btn-xs" style="width:70px;" data-toggle="modal" 
