@@ -10,18 +10,18 @@
     <br/>
     <div align="center">
       <div class="form-group">
-        <%= f.email_field :email, autofocus: true, :class => "form-control", :placeholder => "Enter email", :style => "width:300px;" %>
+        <%= f.email_field :email, autofocus: true, :class => "form-control", :placeholder => "メールアドレス", :style => "width:300px;" %>
       </div>
       <div class="form-group">
-        <%= f.password_field :password, autocomplete: "off", :class => "form-control", :placeholder => "Enter password", :style => "width:300px;" %>
+        <%= f.password_field :password, autocomplete: "off", :class => "form-control", :placeholder => "パスワード", :style => "width:300px;" %>
       </div>
 
       <% if devise_mapping.rememberable? -%>
         <div class="field">
-          <%= f.check_box :remember_me %>
-          <%= f.label :remember_me %>
+          <%= f.check_box :remember_me %> ログインを記憶
         </div>
       <% end %>
+      <br/>
       <%= f.submit "Log in", :class => "btn btn-info", :style => "width:100px;" %>
       <br/>
     </div>
